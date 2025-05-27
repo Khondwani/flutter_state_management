@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_state_management/state/bloc/counter_bloc.dart';
+import 'package:flutter_state_management/state/bloc/counter_event.dart';
+import 'package:flutter_state_management/state/bloc/counter_state.dart';
 import 'package:flutter_state_management/utils/constants.dart';
 
 class HomeCounter extends StatelessWidget {
@@ -19,29 +23,35 @@ class HomeCounter extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Spacer(),
-            //TODO: REPLACE ACTUAL COUNT VALUE WITH THE STATE MANAGEMENT SOLUTIONS
-            const Text(
-              '0',
-              style: TextStyle(
-                fontSize: kCounterFontSize,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            BlocBuilder<CounterBloc, CounterState>(
+              builder: (context, state) {
+                return Text(
+                  '${state.count}',
+                  style: TextStyle(
+                    fontSize: kCounterFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                );
+              },
             ),
             Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                //TODO: WE CAN MAKE THIS A CUSTOM WIDGET AND HAVE THE CHANGE IN ONE PLACE.
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<CounterBloc>().add(DecrementCounterEvent());
+                  },
                   icon: const Icon(Icons.remove, color: Colors.white),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.black),
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<CounterBloc>().add(IncrementCounterEvent());
+                  },
                   icon: const Icon(Icons.add, color: Colors.white),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.teal),
