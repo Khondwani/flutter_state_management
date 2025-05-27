@@ -7,7 +7,11 @@ class HomeCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Countsy'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Countsy'),
+        centerTitle: true,
+        elevation: 3,
+      ),
       body: SafeArea(
         minimum: const EdgeInsets.all(kSafeAreaMinimum),
         child: Column(
