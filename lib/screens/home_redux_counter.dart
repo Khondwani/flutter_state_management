@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_state_management/state/bloc/counter_bloc.dart';
-import 'package:flutter_state_management/state/bloc/counter_event.dart';
-import 'package:flutter_state_management/state/bloc/counter_state.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_state_management/state/redux/counter_actions.dart';
+import 'package:flutter_state_management/state/redux/counter_store.dart';
 import 'package:flutter_state_management/utils/constants.dart';
 
-class HomeCounter extends StatelessWidget {
-  const HomeCounter({super.key});
+class HomeReduxCounter extends StatelessWidget {
+  static const String routeName = '/home_redux_counter';
+  const HomeReduxCounter({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Countsy'),
-        centerTitle: true,
-        elevation: 3,
-      ),
-      body: SafeArea(
+    return StoreProvider<int>(
+      store: CounterStore().store,
+      child: SafeArea(
         minimum: const EdgeInsets.all(kSafeAreaMinimum),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Spacer(),
-            BlocBuilder<CounterBloc, CounterState>(
-              builder: (context, state) {
+            StoreConnector<int, int>(
+              converter: (store) => store.state,
+              builder: (context, count) {
                 return Text(
-                  '${state.count}',
+                  '$count',
                   style: TextStyle(
                     fontSize: kCounterFontSize,
                     fontWeight: FontWeight.bold,
@@ -41,7 +38,7 @@ class HomeCounter extends StatelessWidget {
               children: <Widget>[
                 IconButton(
                   onPressed: () {
-                    context.read<CounterBloc>().add(DecrementCounterEvent());
+                    CounterStore().dispatch(CounterActions.decrement);
                   },
                   icon: const Icon(Icons.remove, color: Colors.white),
                   style: ButtonStyle(
@@ -50,7 +47,7 @@ class HomeCounter extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    context.read<CounterBloc>().add(IncrementCounterEvent());
+                    CounterStore().dispatch(CounterActions.increment);
                   },
                   icon: const Icon(Icons.add, color: Colors.white),
                   style: ButtonStyle(
